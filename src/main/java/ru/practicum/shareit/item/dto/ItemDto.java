@@ -2,19 +2,25 @@ package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemDto {
-    Long id;
+    private Long id;
     @NotNull
     @Size(min = 2, max = 100)
-    String name;
+    private String name;
     @NotNull
     @Size(min = 10, max = 1000)
-    String description;
+    private String description;
     @NotNull
-    Boolean available;
+    private Boolean available;
+    private Long ownerId;
+    private Long requestId;
 }
