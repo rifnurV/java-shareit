@@ -1,5 +1,6 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -7,14 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemDto {
+public class User {
     Long id;
     @NotNull
-    @Size(min = 2, max = 100)
+    @Size(min = 3, max = 100)
     String name;
+    @Email
     @NotNull
-    @Size(min = 10, max = 1000)
-    String description;
-    @NotNull
-    Boolean available;
+    String email;
 }
