@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,11 +22,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByUserId(Long userId) {
-        User user = userRepository.findByUserId(userId);
+        Optional<User> user = userRepository.findById(userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDto(user.get());
     }
 
     @Override
@@ -52,7 +50,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(email)) {
             throw new ConflictException("Email is already used");
         }
-        if (userRepository.existsByUsername(name)) {
+        if (userRepository.existsByName(name)) {
             throw new NotFoundException("Username is used");
         }
 
@@ -61,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(Long userId, UserDto userDto) {
 
-        User userOld = userRepository.findByUserId(userId);
+        Optional<User> userOld = userRepository.findById(userId);
         if (userOld == null) {
             throw new NotFoundException("User with id " + userId + " not found");
         }
@@ -70,18 +68,18 @@ public class UserServiceImpl implements UserService {
             if (!userDto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 throw new ValidationException("Email is not valid");
             }
-            if (!Objects.equals(userOld.getEmail(), userDto.getEmail()) &&
+            if (!Objects.equals(userOld.get().getEmail(), userDto.getEmail()) &&
                     userRepository.existsByEmail(userDto.getEmail())) {
                 throw new ConflictException("Email is already used");
             }
-            userOld.setEmail(userDto.getEmail());
+            userOld.get().setEmail(userDto.getEmail());
         }
 
         if (userDto.getName() != null) {
-            userOld.setName(userDto.getName());
+            userOld.get().setName(userDto.getName());
         }
 
-        User updatedUser = userRepository.update(userId, userOld);
+        User updatedUser = userRepository.save(userOld.get());
         return userMapper.toUserDto(updatedUser);
     }
 
@@ -90,11 +88,13 @@ public class UserServiceImpl implements UserService {
         if (userId == null || userId == 0) {
             throw new NotFoundException("User with id " + userId + " not found");
         }
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        return userRepository.findAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 }
