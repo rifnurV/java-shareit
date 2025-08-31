@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.booking.BookingMapper;
 import ru.practicum.booking.BookingRepository;
-import ru.practicum.booking.dto.BookingDto;
 import ru.practicum.comment.CommentMapper;
 import ru.practicum.comment.CommentRepository;
 import ru.practicum.comment.CommentService;
@@ -25,7 +24,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.booking.BookingStatus.APPROVED;
-import static ru.practicum.booking.BookingStatus.REJECTED;
 
 @Slf4j
 @Service

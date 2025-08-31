@@ -1,6 +1,5 @@
 package ru.practicum.comment;
 
-import lombok.experimental.UtilityClass;
 import org.springframework.stereotype.Component;
 import ru.practicum.comment.dto.CommentDto;
 
