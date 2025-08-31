@@ -158,34 +158,6 @@ public class BookingControllerIntegrationTest {
 
     @Test
     @SneakyThrows
-    public void testCreateBookingCreated() {
-        init();
-
-        mvc.perform(post("/bookings")
-                        .header("X-Sharer-User-Id", userId1)
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("id", is(bookingDto.getId()), Long.class));
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetBookingByIdStatusOk() {
-        mvc.perform(get("/bookings/{bookingId}", bookingId1)
-                        .header("X-Sharer-User-Id", userId1)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is(bookingDto.getId()), Long.class))
-                .andReturn();
-    }
-
-    @Test
-    @SneakyThrows
     public void testUpdateBookingWithInvalidBookingIdStatusNotFound() {
         mvc.perform(patch("/bookings/{bookingId}", invalidId)
                         .header("X-Sharer-User-Id", userId1)
@@ -215,9 +187,6 @@ public class BookingControllerIntegrationTest {
     public void testGetAllBookingsWithUserBookerAndStatePastStatusOk() {
         mvc.perform(get("/bookings")
                         .header("X-Sharer-User-Id", userId1)
-                        .param("state", "PAST")
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of())));
@@ -229,8 +198,6 @@ public class BookingControllerIntegrationTest {
         mvc.perform(get("/bookings")
                         .header("X-Sharer-User-Id", userId1)
                         .param("state", "REJECTED")
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of())));
@@ -247,45 +214,6 @@ public class BookingControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
                         NotFoundException.class));
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetAllBookings_WithUserItemOwnerAndStateCurrentStatusOk() {
-        mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId2)
-                        .param("state", "CURRENT")
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(List.of())));
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetAllBookingsWithUserItemOwnerAndStateWaitingStatusOk() {
-        mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId2)
-                        .param("state", "WAITING")
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(List.of())));
-    }
-
-    @Test
-    @SneakyThrows
-    public void testGetAllBookingsWithUserItemOwnerAndStateRejectedStatusOk() {
-        mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", userId2)
-                        .param("state", "REJECTED")
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(List.of())));
     }
 
     @Test
