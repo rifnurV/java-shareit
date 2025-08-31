@@ -21,7 +21,8 @@ public class ItemMapper {
         }
         if (item.getRequestId() != null) {
             itemDto.setRequestId(item.getRequestId());
-        };
+        }
+        ;
         return itemDto;
     }
 

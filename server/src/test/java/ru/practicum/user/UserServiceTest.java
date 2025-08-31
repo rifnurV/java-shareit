@@ -69,6 +69,7 @@ class UserServiceTest {
         assertThrows(Exception.class, () -> userController.findById(userSaved.getId()),
                 "Пользователь должен удалиться");
     }
+
     @Test
     void addBadEmail() {
         UserDto user = UserDto.builder()
