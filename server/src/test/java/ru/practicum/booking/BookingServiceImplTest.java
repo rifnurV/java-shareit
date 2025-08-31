@@ -13,7 +13,6 @@ import ru.practicum.item.ItemService;
 import ru.practicum.item.dto.ItemDto;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.UserService;
-import ru.practicum.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +55,6 @@ class BookingServiceImplTest {
 
     @Test
     void addBooking_WhenItemNotAvailable_ShouldThrowValidationException() {
-        // Arrange
         Long bookerId = 1L;
         Long itemId = 1L;
 
@@ -70,7 +68,6 @@ class BookingServiceImplTest {
         when(itemService.checkIdExist(itemId)).thenReturn(true);
         when(itemService.isItemAvailable(itemId)).thenReturn(false);
 
-        // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> bookingService.addBooking(inputDto, bookerId));
 
@@ -80,7 +77,6 @@ class BookingServiceImplTest {
 
     @Test
     void patchBooking_WhenApproved_ShouldUpdateStatus() {
-        // Arrange
         Long ownerId = 1L;
         Long bookingId = 1L;
         Long itemId = 1L;
@@ -98,12 +94,9 @@ class BookingServiceImplTest {
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
         when(itemService.findById(itemId)).thenReturn(itemDto);
         when(bookingRepository.save(booking)).thenReturn(booking);
-//        when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
-        // Act
         BookingDto result = bookingService.patchBooking(ownerId, bookingId, true);
 
-        // Assert
         assertNotNull(result);
         assertEquals(APPROVED, result.getStatus());
         verify(bookingRepository, times(1)).save(booking);
@@ -111,7 +104,6 @@ class BookingServiceImplTest {
 
     @Test
     void patchBooking_WhenRejected_ShouldUpdateStatus() {
-        // Arrange
         Long ownerId = 1L;
         Long bookingId = 1L;
         Long itemId = 1L;
@@ -129,12 +121,9 @@ class BookingServiceImplTest {
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
         when(itemService.findById(itemId)).thenReturn(itemDto);
         when(bookingRepository.save(booking)).thenReturn(booking);
-//        when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
-        // Act
         BookingDto result = bookingService.patchBooking(ownerId, bookingId, false);
 
-        // Assert
         assertNotNull(result);
         assertEquals(REJECTED, result.getStatus());
         verify(bookingRepository, times(1)).save(booking);
@@ -142,7 +131,6 @@ class BookingServiceImplTest {
 
     @Test
     void patchBooking_WhenNotOwner_ShouldThrowValidationException() {
-        // Arrange
         Long ownerId = 1L;
         Long otherUserId = 2L;
         Long bookingId = 1L;
@@ -159,7 +147,6 @@ class BookingServiceImplTest {
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
         when(itemService.findById(itemId)).thenReturn(itemDto);
 
-        // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> bookingService.patchBooking(ownerId, bookingId, true));
 
@@ -169,7 +156,6 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingById_ShouldReturnBooking() {
-        // Arrange
         Long requesterId = 1L;
         Long bookingId = 1L;
 
@@ -185,12 +171,9 @@ class BookingServiceImplTest {
                 .build();
 
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
-//        when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
-        // Act
         BookingDto result = bookingService.getBookingById(requesterId, bookingId);
 
-        // Assert
         assertNotNull(result);
         assertEquals(bookingId, result.getId());
         verify(bookingRepository, times(1)).findById(bookingId);
@@ -198,13 +181,12 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingById_WhenNotFound_ShouldThrowNotFoundException() {
-        // Arrange
+
         Long bookingId = 999L;
         Long requesterId = 1L;
 
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> bookingService.getBookingById(requesterId, bookingId));
 
@@ -214,7 +196,6 @@ class BookingServiceImplTest {
 
     @Test
     void getAllUsersBookings_WithAllStatus_ShouldReturnAllBookings() {
-        // Arrange
         Long userId = 1L;
 
         Booking booking1 = new Booking();
@@ -229,13 +210,9 @@ class BookingServiceImplTest {
         BookingDto dto2 = BookingDto.builder().id(2L).bookerId(userId).build();
 
         when(bookingRepository.getByBookerId(userId)).thenReturn(List.of(booking1, booking2));
-//        when(bookingMapper.toDto(booking1)).thenReturn(dto1);
-//        when(bookingMapper.toDto(booking2)).thenReturn(dto2);
 
-        // Act
         List<BookingDto> result = bookingService.getAllUsersBookings(userId, ALL);
 
-        // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         verify(bookingRepository, times(1)).getByBookerId(userId);
@@ -244,7 +221,6 @@ class BookingServiceImplTest {
 
     @Test
     void getAllUsersBookings_WithSpecificStatus_ShouldReturnFilteredBookings() {
-        // Arrange
         Long userId = 1L;
 
         Booking booking = new Booking();
@@ -255,12 +231,9 @@ class BookingServiceImplTest {
         BookingDto dto = BookingDto.builder().id(1L).bookerId(userId).status(WAITING).build();
 
         when(bookingRepository.getByBookerIdAndStatus(userId, WAITING)).thenReturn(List.of(booking));
-//        when(bookingMapper.toDto(booking)).thenReturn(dto);
 
-        // Act
         List<BookingDto> result = bookingService.getAllUsersBookings(userId, WAITING);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(WAITING, result.get(0).getStatus());
@@ -270,7 +243,6 @@ class BookingServiceImplTest {
 
     @Test
     void getByOwner_ShouldReturnOwnerBookings() {
-        // Arrange
         Long ownerId = 1L;
         List<Long> itemIds = List.of(1L, 2L);
 
@@ -286,12 +258,9 @@ class BookingServiceImplTest {
         when(userService.checkIdExist(ownerId)).thenReturn(true);
         when(itemService.getByUserId(ownerId)).thenReturn(List.of(item1, item2));
         when(bookingRepository.getByItemIdInAndStatus(eq(itemIds), any())).thenReturn(List.of(booking));
-//        when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
-        // Act
         List<BookingDto> result = bookingService.getByOwner(ownerId, ALL);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         verify(itemService, times(1)).getByUserId(ownerId);
@@ -300,12 +269,10 @@ class BookingServiceImplTest {
 
     @Test
     void getByOwner_WhenUserNotFound_ShouldThrowNotFoundException() {
-        // Arrange
         Long ownerId = 999L;
 
         when(userService.checkIdExist(ownerId)).thenReturn(false);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> bookingService.getByOwner(ownerId, ALL));
 
@@ -315,7 +282,6 @@ class BookingServiceImplTest {
 
     @Test
     void getByBookerAndItemAndStatus_ShouldReturnFilteredBookings() {
-        // Arrange
         Long userId = 1L;
         Long itemId = 1L;
 
@@ -336,12 +302,9 @@ class BookingServiceImplTest {
 
         when(bookingRepository.getByBookerIdAndItemIdAndStatus(userId, itemId, APPROVED))
                 .thenReturn(List.of(booking));
-//        when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
-        // Act
         List<BookingDto> result = bookingService.getByBookerAndItemAndStatus(userId, itemId, APPROVED);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(PAST, result.get(0).getStatus()); // Should be updated to PAST
@@ -350,35 +313,28 @@ class BookingServiceImplTest {
 
     @Test
     void checkIdExistImpl_ShouldReturnTrueWhenExists() {
-        // Arrange
         Long bookingId = 1L;
         when(bookingRepository.existsById(bookingId)).thenReturn(true);
 
-        // Act
         boolean result = bookingService.checkIdExistImpl(bookingId);
 
-        // Assert
         assertTrue(result);
         verify(bookingRepository, times(1)).existsById(bookingId);
     }
 
     @Test
     void checkIdExistImpl_ShouldReturnFalseWhenNotExists() {
-        // Arrange
         Long bookingId = 999L;
         when(bookingRepository.existsById(bookingId)).thenReturn(false);
 
-        // Act
         boolean result = bookingService.checkIdExistImpl(bookingId);
 
-        // Assert
         assertFalse(result);
         verify(bookingRepository, times(1)).existsById(bookingId);
     }
 
     @Test
     void addBooking_WhenUserNotFound_ShouldThrowNotFoundException() {
-        // Arrange
         Long bookerId = 999L;
         Long itemId = 1L;
 
@@ -409,13 +365,11 @@ class BookingServiceImplTest {
 
     @Test
     void patchBooking_WhenBookingNotFound_ShouldThrowNotFoundException() {
-        // Arrange
         Long ownerId = 1L;
         Long bookingId = 999L;
 
         when(bookingRepository.existsById(bookingId)).thenReturn(false);
 
-        // Act & Assert
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> bookingService.patchBooking(ownerId, bookingId, true));
 
@@ -425,14 +379,12 @@ class BookingServiceImplTest {
 
     @Test
     void patchBooking_WhenUserNotFound_ShouldThrowValidationException() {
-        // Arrange
         Long ownerId = 999L;
         Long bookingId = 1L;
 
         when(bookingRepository.existsById(bookingId)).thenReturn(true);
         when(userService.checkIdExist(ownerId)).thenReturn(false);
 
-        // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> bookingService.patchBooking(ownerId, bookingId, true));
 
@@ -442,15 +394,12 @@ class BookingServiceImplTest {
 
     @Test
     void getAllUsersBookings_WhenNoBookings_ShouldReturnEmptyList() {
-        // Arrange
         Long userId = 1L;
 
         when(bookingRepository.getByBookerId(userId)).thenReturn(List.of());
 
-        // Act
         List<BookingDto> result = bookingService.getAllUsersBookings(userId, ALL);
 
-        // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(bookingRepository, times(1)).getByBookerId(userId);
@@ -458,17 +407,14 @@ class BookingServiceImplTest {
 
     @Test
     void getByOwner_WhenNoItems_ShouldReturnEmptyList() {
-        // Arrange
         Long ownerId = 1L;
 
         when(userService.checkIdExist(ownerId)).thenReturn(true);
         when(itemService.getByUserId(ownerId)).thenReturn(List.of());
         when(bookingRepository.getByItemIdInAndStatus(any(), any())).thenReturn(List.of());
 
-        // Act
         List<BookingDto> result = bookingService.getByOwner(ownerId, ALL);
 
-        // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(itemService, times(1)).getByUserId(ownerId);
