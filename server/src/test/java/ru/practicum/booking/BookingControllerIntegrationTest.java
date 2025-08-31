@@ -75,7 +75,6 @@ public class BookingControllerIntegrationTest {
     private final LocalDateTime now = LocalDateTime.now();
     private final LocalDateTime startTime = now.plusHours(1);
     private final LocalDateTime endTime = now.plusHours(2);
-    private final String REQUEST_HEADER_USER_ID = "X-Sharer-User-Id";
 
     public void init() {
         userRepository.save(user1);
@@ -163,7 +162,7 @@ public class BookingControllerIntegrationTest {
         init();
 
         mvc.perform(post("/bookings")
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .content(mapper.writeValueAsString(bookingDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +175,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetBookingByIdStatusOk() {
         mvc.perform(get("/bookings/{bookingId}", bookingId1)
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -189,7 +188,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testUpdateBookingWithInvalidBookingIdStatusNotFound() {
         mvc.perform(patch("/bookings/{bookingId}", invalidId)
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .param("approved", "true")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -202,7 +201,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStateStatusOk() {
         mvc.perform(get("/bookings")
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .param("state", "CURRENT")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -215,7 +214,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStatePastStatusOk() {
         mvc.perform(get("/bookings")
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .param("state", "PAST")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -228,7 +227,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStateRejectedStatusOk() {
         mvc.perform(get("/bookings")
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .param("state", "REJECTED")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -241,7 +240,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetBookingByIdWithInvalidBookingIdStatusNotFound() {
         mvc.perform(get("/bookings/{bookingId}", invalidId)
-                        .header(REQUEST_HEADER_USER_ID, userId1)
+                        .header("X-Sharer-User-Id", userId1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -254,7 +253,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookings_WithUserItemOwnerAndStateCurrentStatusOk() {
         mvc.perform(get("/bookings/owner")
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .param("state", "CURRENT")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -267,7 +266,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserItemOwnerAndStateWaitingStatusOk() {
         mvc.perform(get("/bookings/owner")
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .param("state", "WAITING")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -280,7 +279,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserItemOwnerAndStateRejectedStatusOk() {
         mvc.perform(get("/bookings/owner")
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .param("state", "REJECTED")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -293,7 +292,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserItemOwnerInvalidIdStatusNotFound() {
         mvc.perform(get("/bookings/owner")
-                        .header(REQUEST_HEADER_USER_ID, invalidId)
+                        .header("X-Sharer-User-Id", invalidId)
                         .param("state", "ALL")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))

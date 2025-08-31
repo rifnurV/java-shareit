@@ -58,7 +58,6 @@ class ItemControllerIntegrationTest {
     private final Long invalidId = 999L;
     private final int from = 0;
     private final int size = 2;
-    private final String REQUEST_HEADER_USER_ID = "X-Sharer-User-Id";
 
     public void init() {
         user1 = new User();
@@ -131,7 +130,7 @@ class ItemControllerIntegrationTest {
         List<ItemDto> items = Collections.singletonList(itemDto);
 
         mvc.perform(get("/items/search")
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .param("text", text)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -144,7 +143,7 @@ class ItemControllerIntegrationTest {
         commentDto.setText("Add comment from user1");
 
         mvc.perform(post("/items/{itemId}/comment", 2L)
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .content(mapper.writeValueAsString(commentDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -162,7 +161,7 @@ class ItemControllerIntegrationTest {
 
 
         mvc.perform(post("/items/{itemId}/comment", invalidId)
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .content(mapper.writeValueAsString(commentDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +177,7 @@ class ItemControllerIntegrationTest {
         String text = "";
 
         mvc.perform(get("/items/search")
-                        .header(REQUEST_HEADER_USER_ID, userId2)
+                        .header("X-Sharer-User-Id", userId2)
                         .param("text", text)
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))

@@ -73,7 +73,6 @@ class BookingControllerTest {
     private final LocalDateTime now = LocalDateTime.now();
     private final LocalDateTime startTime = now.plusHours(1);
     private final LocalDateTime endTime = now.plusHours(2);
-    private final String REQUEST_HEADER_USER_ID = "X-Sharer-User-Id";
 
     @BeforeEach
     void setUp() {
@@ -170,7 +169,7 @@ class BookingControllerTest {
         when(service.addBooking(any(BookingDto.class), anyLong())).thenReturn(bookingDto);
 
         mvc.perform(post("/bookings")
-                        .header(REQUEST_HEADER_USER_ID, userId)
+                        .header("X-Sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(bookingDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -189,7 +188,7 @@ class BookingControllerTest {
         when(service.patchBooking(anyLong(), anyLong(), anyBoolean())).thenReturn(bookingDto);
 
         mvc.perform(patch("/bookings/{bookingId}", bookingId)
-                        .header(REQUEST_HEADER_USER_ID, userId)
+                        .header("X-Sharer-User-Id", userId)
                         .param("approved", "true")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -209,7 +208,7 @@ class BookingControllerTest {
         when(service.getBookingById(anyLong(), anyLong())).thenReturn(bookingDto);
 
         mvc.perform(get("/bookings/{bookingId}", bookingId)
-                        .header(REQUEST_HEADER_USER_ID, userId)
+                        .header("X-Sharer-User-Id", userId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
