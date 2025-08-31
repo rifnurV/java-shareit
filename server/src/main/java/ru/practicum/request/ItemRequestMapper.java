@@ -6,12 +6,12 @@ import java.util.List;
 
 public class ItemRequestMapper {
     public static ItemRequestDto toDto(Request request) {
-        ItemRequestDto requestDto = new ItemRequestDto();
-        requestDto.setId(request.getId());
-        requestDto.setDescription(request.getDescription());
-        requestDto.setRequestorId(request.getRequestorId());
-        requestDto.setCreated(request.getCreated());
-        return requestDto;
+        return ItemRequestDto.builder()
+                .id(request.getId())
+                .description(request.getDescription())
+                .requestorId(request.getRequestorId())
+                .created(request.getCreated())
+                .build();
     }
 
     public static Request toRequest(ItemRequestDto requestDto) {

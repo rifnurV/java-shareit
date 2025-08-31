@@ -110,11 +110,12 @@ public class BookingControllerIntegrationTest {
         item1.setAvailable(true);
         item1.setOwnerId(userId1);
 
-        itemDto1 = new ItemDto();
-        itemDto1.setId(itemId1);
-        itemDto1.setName("item1");
-        itemDto1.setDescription("Description 1");
-        itemDto1.setAvailable(true);
+        itemDto1 = ItemDto.builder()
+                .id(itemId1)
+                .name("item1")
+                .description("Description 1")
+                .available(true)
+                .build();
 
         item2 = new Item();
         item2.setName("item 2");
@@ -122,11 +123,12 @@ public class BookingControllerIntegrationTest {
         item2.setAvailable(true);
         item2.setOwnerId(userId1);
 
-        itemDto2 = new ItemDto();
-        itemDto2.setId(itemId2);
-        itemDto2.setName("item 2");
-        itemDto2.setDescription("Description  2");
-        itemDto2.setAvailable(true);
+        itemDto2 = ItemDto.builder()
+                .id(itemId2)
+                .name("item 2")
+                .description("Description  2")
+                .available(true)
+                .build();
 
         item3 = new Item();
         item3.setName("item 3");
@@ -141,18 +143,20 @@ public class BookingControllerIntegrationTest {
         booking.setBookerId(userId1);
         booking.setItemId(itemId1);
 
-        bookingDto = new BookingDto();
-        bookingDto.setStart(startTime);
-        bookingDto.setEnd(endTime);
-        bookingDto.setItemId(itemId2);
+        bookingDto = BookingDto.builder()
+                .start(startTime)
+                .end(endTime)
+                .itemId(itemId2)
+                .build();
 
-        bookingDto1 = new BookingDto();
-        bookingDto.setId(bookingId1);
-        bookingDto.setStart(startTime);
-        bookingDto.setEnd(endTime);
-        bookingDto.setStatus(BookingStatus.WAITING);
-        bookingDto.setBookerId(userId1);
-        bookingDto.setItemId(itemId2);
+        bookingDto1 = BookingDto.builder()
+                .id(bookingId1)
+                .start(startTime)
+                .end(endTime)
+                .status(BookingStatus.WAITING)
+                .bookerId(userId1)
+                .itemId(itemId2)
+                .build();
     }
 
     @Test

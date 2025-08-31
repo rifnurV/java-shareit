@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.booking.BookingStatus;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class BookingDto {
     private Long id;
     @NotNull

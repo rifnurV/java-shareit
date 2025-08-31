@@ -106,9 +106,10 @@ class BookingControllerTest {
         item.setAvailable(true);
         item.setRequestId(itemRequestId);
 
-        itemRequestDto = new ItemRequestDto();
-        itemRequestDto.setId(itemId);
-        itemRequestDto.setDescription("Description item");
+        itemRequestDto = ItemRequestDto.builder()
+                .id(itemId)
+                .description("Description item")
+                .build();
     }
 
     void setUpComment() {
@@ -120,12 +121,13 @@ class BookingControllerTest {
         comment.setItemId(itemId);
         comment.setAuthorId(userId);
 
-        commentOutputDto = new CommentDto();
-        commentOutputDto.setId(commentId);
-        commentOutputDto.setCreated(startTime);
-        commentOutputDto.setItemId(itemId);
-        commentOutputDto.setAuthorId(userId);
-        commentOutputDto.setText("Add comment from user1");
+        commentOutputDto = CommentDto.builder()
+                .id(commentId)
+                .created(startTime)
+                .itemId(itemId)
+                .authorId(userId)
+                .text("Add comment from user1")
+                .build();
     }
 
     void setUpItemRequest() {
@@ -136,12 +138,13 @@ class BookingControllerTest {
         itemRequest.setDescription("Description item 2");
         itemRequest.setCreated(startTime);
 
-        itemRequestDto = new ItemRequestDto();
-        itemRequestDto.setId(itemRequestId);
-        itemRequestDto.setRequestorId(userId);
-        itemRequestDto.setDescription("Description item 2");
-        itemRequestDto.setCreated(startTime);
-        itemRequestDto.setItems(List.of());
+        itemRequestDto = ItemRequestDto.builder()
+                .id(itemRequestId)
+                .requestorId(userId)
+                .description("Description item 2")
+                .created(startTime)
+                .items(List.of())
+                .build();
     }
 
     void setUpBooking() {
@@ -154,13 +157,14 @@ class BookingControllerTest {
         booking.setItemId(itemId);
         booking.setBookerId(userId);
 
-        bookingDto = new BookingDto();
-        bookingDto.setId(bookingId);
-        bookingDto.setStart(startTime);
-        bookingDto.setEnd(endTime);
-        bookingDto.setStatus(BookingStatus.WAITING);
-        bookingDto.setItemId(itemId);
-        bookingDto.setBookerId(userId);
+        bookingDto = BookingDto.builder()
+                .id(bookingId)
+                .start(startTime)
+                .end(endTime)
+                .status(BookingStatus.WAITING)
+                .itemId(itemId)
+                .bookerId(userId)
+                .build();
     }
 
     @Test

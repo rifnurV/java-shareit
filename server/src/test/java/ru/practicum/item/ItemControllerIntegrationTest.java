@@ -73,17 +73,19 @@ class ItemControllerIntegrationTest {
     @BeforeEach
     public void setUp() {
 
-        itemDto = new ItemDto();
-        itemDto.setName("Item");
-        itemDto.setDescription("Description item");
-        itemDto.setAvailable(true);
+        itemDto = ItemDto.builder()
+                .name("Item")
+                .description("Description item")
+                .available(true)
+                .build();
 
-        itemDtoCreated = new ItemDto();
-        itemDtoCreated.setId(itemId1);
-        itemDtoCreated.setName("Item");
-        itemDtoCreated.setDescription("Description item");
-        itemDtoCreated.setAvailable(true);
-        itemDtoCreated.setComments(new ArrayList<>());
+        itemDtoCreated = ItemDto.builder()
+                .id(itemId1)
+                .name("Item")
+                .description("Description item")
+                .available(true)
+                .comments(new ArrayList<>())
+                .build();
     }
 
     @Test
@@ -120,11 +122,12 @@ class ItemControllerIntegrationTest {
     @Test
     @SneakyThrows
     public void testSearchAllItems_WithText_ReturnsStatusOk() {
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(2L);
-        itemDto.setName("Item 3");
-        itemDto.setDescription("Description item 3");
-        itemDto.setAvailable(true);
+        ItemDto itemDto = ItemDto.builder()
+                .id(2L)
+                .name("Item 3")
+                .description("Description item 3")
+                .available(true)
+                .build();
         String text = "tem";
 
         List<ItemDto> items = Collections.singletonList(itemDto);
@@ -139,8 +142,8 @@ class ItemControllerIntegrationTest {
     @Test
     @SneakyThrows
     public void testAddComment_WithNotConfirmBooking_ReturnsStatusBadRequest() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setText("Add comment from user1");
+        CommentDto commentDto = CommentDto.builder()
+                .text("Add comment from user1").build();
 
         mvc.perform(post("/items/{itemId}/comment", 2L)
                         .header("X-Sharer-User-Id", userId2)
@@ -156,8 +159,7 @@ class ItemControllerIntegrationTest {
     @Test
     @SneakyThrows
     public void testAddComment_WithInvalidItemId_ReturnsStatusNotFound() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setText("Add comment from user1");
+        CommentDto commentDto = CommentDto.builder().text("Add comment from user1").build();
 
 
         mvc.perform(post("/items/{itemId}/comment", invalidId)

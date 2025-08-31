@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 public class ItemDto {
     private Long id;
     @NotBlank

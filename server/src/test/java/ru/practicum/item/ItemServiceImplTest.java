@@ -19,18 +19,6 @@ class ItemServiceImplTest {
     private UserService userService;
 
     @Test
-    void get() {
-    }
-
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void testFindById() {
-    }
-
-    @Test
     void create() {
         UserDto user = UserDto.builder()
                 .name("name")
@@ -39,18 +27,15 @@ class ItemServiceImplTest {
 
         UserDto userSaved = userService.create(user);
 
-        ItemDto item = new ItemDto();
-        item.setName("name");
-        item.setDescription("description");
-        item.setAvailable(true);
-        item.setOwnerId(userSaved.getId());
+        ItemDto item = ItemDto.builder()
+                .name("name")
+                .description("description")
+                .available(true)
+                .ownerId(userSaved.getId())
+                .build();
 
         ItemDto itemSaved = itemService.create(item, userSaved.getId());
         assertTrue(itemSaved.getId() > 0, "Вещь должна добавиться");
-    }
-
-    @Test
-    void getByRequestIds() {
     }
 
     @Test
@@ -62,27 +47,16 @@ class ItemServiceImplTest {
 
         UserDto userSaved = userService.create(user);
 
-        ItemDto item = new ItemDto();
-        item.setName("name");
-        item.setDescription("description");
-        item.setAvailable(true);
-        item.setOwnerId(userSaved.getId());
+        ItemDto item = ItemDto.builder()
+                .name("name")
+                .description("description")
+                .available(true)
+                .ownerId(userSaved.getId())
+                        .build();
 
         itemService.create(item, userSaved.getId());
 
         List<ItemDto> itemSaved = itemService.getByUserId(userSaved.getId());
         assertTrue(itemSaved.size() == 1, "Вещь должна добавиться");
-    }
-
-    @Test
-    void addComment() {
-    }
-
-    @Test
-    void checkIdExist() {
-    }
-
-    @Test
-    void isItemAvailable() {
     }
 }

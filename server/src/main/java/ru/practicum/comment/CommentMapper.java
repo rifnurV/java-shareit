@@ -9,12 +9,13 @@ import java.util.List;
 public class CommentMapper {
 
     public static CommentDto toCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setId(comment.getId());
-        commentDto.setText(comment.getText());
-        commentDto.setItemId(comment.getItemId());
-        commentDto.setAuthorId(comment.getAuthorId());
-        commentDto.setCreated(comment.getCreated());
+        CommentDto commentDto = CommentDto.builder()
+                .id(comment.getId())
+                .text(comment.getText())
+                .itemId(comment.getItemId())
+                .authorId(comment.getAuthorId())
+                .created(comment.getCreated())
+                .build();
         return commentDto;
     }
 

@@ -9,14 +9,14 @@ import java.util.List;
 public class BookingMapper {
 
     public static BookingDto toDto(Booking booking) {
-        BookingDto bookingDto = new BookingDto();
-        bookingDto.setId(booking.getId());
-        bookingDto.setEnd(booking.getEnd());
-        bookingDto.setStart(booking.getStart());
-        bookingDto.setStatus(booking.getStatus());
-        bookingDto.setItemId(booking.getItemId());
-        bookingDto.setBookerId(booking.getBookerId());
-        return bookingDto;
+        return BookingDto.builder()
+                .id(booking.getId())
+                .end(booking.getEnd())
+                .start(booking.getStart())
+                .status(booking.getStatus())
+                .itemId(booking.getItemId())
+                .bookerId(booking.getBookerId())
+                .build();
     }
 
     public static List<BookingDto> toDto(List<Booking> bookings) {
