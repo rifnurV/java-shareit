@@ -47,8 +47,6 @@ class ItemControllerIntegrationTest {
 
     private ItemDto itemDto;
     private ItemDto itemDtoCreated;
-    private ItemDto itemDto2;
-    private ItemDto itemDto3;
     private User user1;
     private User user2;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -56,8 +54,6 @@ class ItemControllerIntegrationTest {
     private final Long userId1 = 1L;
     private final Long userId2 = 2L;
     private final Long invalidId = 999L;
-    private final int from = 0;
-    private final int size = 2;
 
     public void init() {
         user1 = new User();
@@ -181,8 +177,6 @@ class ItemControllerIntegrationTest {
         mvc.perform(get("/items/search")
                         .header("X-Sharer-User-Id", userId2)
                         .param("text", text)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of())));

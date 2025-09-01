@@ -106,7 +106,6 @@ class ErrorHandlerTest {
 
     @Test
     void errorResponse_EqualsWithDifferentClass_ShouldReturnFalse() {
-        // Arrange
         ErrorResponse response = new ErrorResponse("Error");
 
         assertNotEquals("string", response);

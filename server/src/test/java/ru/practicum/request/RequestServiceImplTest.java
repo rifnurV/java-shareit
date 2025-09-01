@@ -159,7 +159,6 @@ class RequestServiceImplTest {
 
     @Test
     void getAll_WhenNoRequests_ShouldReturnEmptyList() {
-
         when(requestRepository.findAll()).thenReturn(List.of());
 
         List<ItemRequestDto> result = requestService.getAll();

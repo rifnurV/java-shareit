@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.booking.dto.BookingDto;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.item.ItemRepository;
 import ru.practicum.item.dto.ItemDto;
@@ -25,9 +26,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.booking.BookingStatus.APPROVED;
 
 @Slf4j
 @SpringBootTest
@@ -43,7 +46,11 @@ public class BookingControllerIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
+    private BookingService bookingService;
+
+    @Autowired
     private ItemRepository itemRepository;
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     private User user1;
@@ -139,7 +146,7 @@ public class BookingControllerIntegrationTest {
         booking = new Booking();
         booking.setStart(startTime);
         booking.setEnd(endTime);
-        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStatus(APPROVED);
         booking.setBookerId(userId1);
         booking.setItemId(itemId1);
 
@@ -157,6 +164,23 @@ public class BookingControllerIntegrationTest {
                 .bookerId(userId1)
                 .itemId(itemId2)
                 .build();
+    }
+    @Test
+    @SneakyThrows
+    public void testCreateItem_ReturnsStatusCreated() {
+        log.info("Start test: создать предмет №1 пользователем №1.");
+        init();
+
+        mvc.perform(post("/items")
+                        .header("X-Sharer-User-Id", userId1)
+                        .content(mapper.writeValueAsString(itemDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("item1"))
+                .andExpect(jsonPath("$.available").value(true));
     }
 
     @Test
@@ -233,4 +257,41 @@ public class BookingControllerIntegrationTest {
                         NotFoundException.class));
 
     }
+
+    @Test
+    @SneakyThrows
+    public void testAddComment() {
+        LocalDateTime now = LocalDateTime.now();
+
+        BookingDto bookingInputDTO = BookingDto.builder()
+                .start(now.minusHours(2))
+                .end(now.minusHours(1))
+                .status(APPROVED)
+                .bookerId(userId2)
+                .itemId(itemId1)
+                .build();
+        bookingService.addBooking( bookingInputDTO,userId2);
+        bookingService.patchBooking(userId1, itemId1, true);
+
+        CommentDto commentInputDTO = CommentDto.builder()
+                .text("Add comment from user1")
+                .build();
+
+        CommentDto commentOutputDTO = CommentDto.builder()
+                .id(1L)
+                .text("Add comment from user1")
+                .authorName("ComCom")
+                .created(now)
+                .build();
+
+        mvc.perform(post("/items/{itemId}/comment", itemId1)
+                        .header("X-Sharer-User-Id", userId2)
+                        .content(mapper.writeValueAsString(commentInputDTO))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.text", is(commentOutputDTO.getText())));
+    }
+
 }

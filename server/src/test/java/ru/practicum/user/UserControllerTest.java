@@ -65,14 +65,13 @@ class UserControllerTest {
 
     @Test
     void findById_WhenUserNotFound_ShouldThrowNotFoundException() throws Exception {
-        // Arrange
         Long userId = 999L;
         String expectedErrorMessage = "User with id " + userId + " not found";
 
         when(service.getUserByUserId(anyLong()))
                 .thenThrow(new NotFoundException(expectedErrorMessage));
 
-        // Act & Assert
+
         mvc.perform(get("/users/{userId}", userId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value(expectedErrorMessage));
