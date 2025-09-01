@@ -10,7 +10,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
+    public ItemDto toItemDto(Item item) {
         ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -28,7 +28,7 @@ public class ItemMapper {
         return itemDto;
     }
 
-    public static Item toEntity(ItemDto itemDto) {
+    public Item toEntity(ItemDto itemDto) {
         Item item = new Item();
         item.setId(itemDto.getId());
         item.setName(itemDto.getName());
@@ -43,7 +43,7 @@ public class ItemMapper {
         return item;
     }
 
-    public static List<ItemDto> toItemDtoList(Iterable<Item> items) {
+    public List<ItemDto> toItemDtoList(Iterable<Item> items) {
         List<ItemDto> dtos = new ArrayList<>();
         for (Item item : items) {
             dtos.add(toItemDto(item));
@@ -51,7 +51,7 @@ public class ItemMapper {
         return dtos;
     }
 
-    public static List<ItemDto> toDto(List<Item> items) {
-        return items.stream().map(ItemMapper::toItemDto).toList();
+    public List<ItemDto> toDto(List<Item> items) {
+        return items.stream().map(this::toItemDto).toList();
     }
 }

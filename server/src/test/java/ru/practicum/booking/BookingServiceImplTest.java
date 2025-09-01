@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.booking.dto.BookingDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
+import ru.practicum.item.Item;
 import ru.practicum.item.ItemRepository;
 import ru.practicum.item.ItemService;
 import ru.practicum.item.dto.ItemDto;
@@ -30,12 +31,6 @@ class BookingServiceImplTest {
     private BookingRepository bookingRepository;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private ItemRepository itemRepository;
-
-    @Mock
     private UserService userService;
 
     @Mock
@@ -46,9 +41,6 @@ class BookingServiceImplTest {
 
     @Mock
     private ru.practicum.user.UserMapper userMapper;
-
-    @Mock
-    private ru.practicum.item.ItemMapper itemMapper;
 
     @InjectMocks
     private BookingServiceImpl bookingService;
@@ -419,4 +411,6 @@ class BookingServiceImplTest {
         assertTrue(result.isEmpty());
         verify(itemService, times(1)).getByUserId(ownerId);
     }
+
+
 }

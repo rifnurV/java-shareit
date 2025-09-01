@@ -44,14 +44,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto findById(Long id) {
         ItemDto itemDto = itemRepository.findById(id)
-                .map(ItemMapper::toItemDto)
+                .map(itemMapper::toItemDto)
                 .orElseThrow(() -> new NotFoundException("Вещь с таким id не найдена"));
         return addCommentsAndBookings(itemDto);
     }
 
     @Override
     public List<ItemDto> findById(List<Long> ids) {
-        return itemRepository.getByIdIn(ids).stream().map(ItemMapper::toItemDto).toList();
+        return itemRepository.getByIdIn(ids).stream().map(itemMapper::toItemDto).toList();
     }
 
     @Override
@@ -67,30 +67,15 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("User from id= " + ownerId + " not found"));
 
         itemDto.setOwnerId(ownerId);
-        Item item = ItemMapper.toEntity(itemDto);
+        Item item = itemMapper.toEntity(itemDto);
         return itemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto update(Long itemId, ItemDto itemDto, Long ownerId) {
-        Optional<Item> itemOld = itemRepository.findById(itemId);
-        if (itemOld == null) {
-            throw new NotFoundException(String.format("Item with id %s not found", itemId));
-        }
-        if (!itemOld.get().getOwnerId().equals(ownerId)) {
-            throw new NotFoundException("Owner id mismatch");
-        }
-        if (itemDto.getName() != null) {
-            itemOld.get().setName(itemDto.getName());
-        }
-        if (itemDto.getDescription() != null) {
-            itemOld.get().setDescription(itemDto.getDescription());
-        }
-        if (itemDto.getAvailable() != null) {
-            itemOld.get().setAvailable(itemDto.getAvailable());
-        }
-        Item updatedItem = itemRepository.save(itemOld.get());
-        return itemMapper.toItemDto(updatedItem);
+        return itemRepository.findById(itemId)
+                .map(itemMapper::toItemDto)
+                .orElseThrow(() -> new NotFoundException(String.format("Item with id %s not found", itemId)));
     }
 
     @Override
@@ -99,18 +84,18 @@ public class ItemServiceImpl implements ItemService {
             return Collections.EMPTY_LIST;
         }
         List<Item> item = itemRepository.search(text);
-        return ItemMapper.toItemDtoList(item);
+        return itemMapper.toItemDtoList(item);
     }
 
     @Override
     public List<ItemDto> getByRequestIds(List<Long> requestIds) {
         return itemRepository.findByRequestIdIn(requestIds).stream()
-                .map(ItemMapper::toItemDto).toList();
+                .map(itemMapper::toItemDto).toList();
     }
 
     @Override
     public List<ItemDto> getByUserId(Long userId) {
-        return addCommentsAndBookings(ItemMapper.toDto(itemRepository.findByOwnerId(userId)));
+        return addCommentsAndBookings(itemMapper.toDto(itemRepository.findByOwnerId(userId)));
     }
 
     @Override
@@ -119,9 +104,7 @@ public class ItemServiceImpl implements ItemService {
         UserDto userResponseDto = checkExistsUserById(authorId);
         checkExistsItemById(itemId);
 
-        LocalDateTime now = LocalDateTime.now();
-
-        boolean isBookingConfirmed = bookingRepository.existsByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, authorId, APPROVED, now);
+        boolean isBookingConfirmed = bookingRepository.existsByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, authorId, APPROVED, LocalDateTime.now());
         if (!isBookingConfirmed) {
             throw new ValidationException(String.format("The user with with the ID - `%d` did not rent item with the ID - `%d`.", authorId, itemId));
         }
@@ -141,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isItemAvailable(Long itemId) {
         return itemRepository.findAvailableByItemId(itemId);
     }

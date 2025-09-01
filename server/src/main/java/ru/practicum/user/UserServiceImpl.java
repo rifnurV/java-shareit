@@ -34,18 +34,10 @@ public class UserServiceImpl implements UserService {
     public UserDto update(Long userId, UserDto userDto) {
 
         Optional<User> userOld = userRepository.findById(userId);
-        if (userOld == null) {
-            throw new NotFoundException("User with id " + userId + " not found");
-        }
+        validUserNotNull(userId, userOld);
 
         if (userDto.getEmail() != null) {
-            if (!userDto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-                throw new ValidationException("Email is not valid");
-            }
-            if (!Objects.equals(userOld.get().getEmail(), userDto.getEmail()) &&
-                    userRepository.existsByEmail(userDto.getEmail())) {
-                throw new ConflictException("Email is already used");
-            }
+            validateMail(userDto, userOld);
             userOld.get().setEmail(userDto.getEmail());
         }
 
@@ -73,5 +65,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> get(List<Long> ids) {
         return userRepository.getByIdIn(ids).stream().map(UserMapper::toUserDto).toList();
+    }
+
+    private static void validUserNotNull(Long userId, Optional<User> userOld) {
+        if (userOld == null) {
+            throw new NotFoundException("User with id " + userId + " not found");
+        }
+    }
+
+    private void validateMail(UserDto userDto, Optional<User> userOld) {
+        if (!userDto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new ValidationException("Email is not valid");
+        }
+        if (!Objects.equals(userOld.get().getEmail(), userDto.getEmail()) &&
+                userRepository.existsByEmail(userDto.getEmail())) {
+            throw new ConflictException("Email is already used");
+        }
     }
 }

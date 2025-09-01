@@ -187,4 +187,5 @@ class ItemControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of())));
     }
+
 }

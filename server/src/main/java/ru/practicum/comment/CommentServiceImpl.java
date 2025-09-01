@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
         CommentDto comment = commentRepository.findById(id)
                 .map(CommentMapper::toCommentDto)
                 .orElseThrow(() -> new NotFoundException("Комментарий с таким id не найден"));
-        return addUserInfo(comment);
+        return addUserInfo(List.of(comment)).get(0);
     }
 
     @Override
@@ -107,19 +107,17 @@ public class CommentServiceImpl implements CommentService {
     private CommentDto save(CommentDto commentDto) {
         Comment comment = CommentMapper.toComment(commentDto);
         CommentDto commentSaved = CommentMapper.toCommentDto(commentRepository.save(comment));
-        return addUserInfo(commentSaved);
+        return addUserInfo(List.of(commentSaved)).get(0);
     }
 
     private void checkItemBookedAndApproved(Long bookerId, Long itemId) {
         List<BookingDto> bookings = bookingService.getByBookerAndItemAndStatus(bookerId, itemId,
                 BookingStatus.APPROVED);
         if (bookings.isEmpty()) {
-            throw new ValidationException(
-                    "Чтобы оставить комментарий, нужно взять вещь в аренду");
+            throw new ValidationException("Чтобы оставить комментарий, нужно взять вещь в аренду");
         }
         if (!bookings.get(0).getStatus().equals(BookingStatus.PAST)) {
-            throw new ValidationException(
-                    "Чтобы оставить комментарий, нужно дождаться, пока закончится срок аренды");
+            throw new ValidationException("Чтобы оставить комментарий, нужно дождаться, пока закончится срок аренды");
         }
     }
 }
