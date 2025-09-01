@@ -8,11 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.booking.dto.BookingDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
-import ru.practicum.item.Item;
-import ru.practicum.item.ItemRepository;
 import ru.practicum.item.ItemService;
 import ru.practicum.item.dto.ItemDto;
-import ru.practicum.user.UserRepository;
 import ru.practicum.user.UserService;
 
 import java.time.LocalDateTime;

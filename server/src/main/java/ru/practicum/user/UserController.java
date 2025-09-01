@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.exception.NotFoundException;
 import ru.practicum.user.dto.UserDto;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;

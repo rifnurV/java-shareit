@@ -2,13 +2,11 @@ package ru.practicum.item;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.item.dto.ItemDto;
-import ru.practicum.user.User;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.UserService;
 import ru.practicum.user.dto.UserDto;
@@ -16,9 +14,6 @@ import ru.practicum.user.dto.UserDto;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
