@@ -165,6 +165,7 @@ public class BookingControllerIntegrationTest {
                 .itemId(itemId2)
                 .build();
     }
+
     @Test
     @SneakyThrows
     public void testCreateItem_ReturnsStatusCreated() {
@@ -270,7 +271,7 @@ public class BookingControllerIntegrationTest {
                 .bookerId(userId2)
                 .itemId(itemId1)
                 .build();
-        bookingService.addBooking( bookingInputDTO,userId2);
+        bookingService.addBooking(bookingInputDTO, userId2);
         bookingService.patchBooking(userId1, itemId1, true);
 
         CommentDto commentInputDTO = CommentDto.builder()
