@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -173,7 +174,7 @@ class BookingControllerTest {
         when(service.addBooking(any(BookingDto.class), anyLong())).thenReturn(bookingDto);
 
         mvc.perform(post("/bookings")
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .content(mapper.writeValueAsString(bookingDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +193,7 @@ class BookingControllerTest {
         when(service.patchBooking(anyLong(), anyLong(), anyBoolean())).thenReturn(bookingDto);
 
         mvc.perform(patch("/bookings/{bookingId}", bookingId)
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .param("approved", "true")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,7 +213,7 @@ class BookingControllerTest {
         when(service.getBookingById(anyLong(), anyLong())).thenReturn(bookingDto);
 
         mvc.perform(get("/bookings/{bookingId}", bookingId)
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

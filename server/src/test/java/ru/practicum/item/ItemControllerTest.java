@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 @WebMvcTest(ItemController.class)
 class ItemControllerTest {
@@ -38,7 +39,7 @@ class ItemControllerTest {
         when(itemService.getByUserId(userId)).thenReturn(List.of(item1, item2));
 
         mvc.perform(get("/items")
-                        .header("X-Sharer-User-Id", userId))
+                        .header(X_SHARER_USER_ID, userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].id").value(1L))
@@ -116,7 +117,7 @@ class ItemControllerTest {
         when(itemService.create(any(ItemDto.class), eq(userId))).thenReturn(outputDto);
 
         mvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isCreated())
@@ -148,7 +149,7 @@ class ItemControllerTest {
         when(itemService.update(eq(itemId), any(ItemDto.class), eq(userId))).thenReturn(outputDto);
 
         mvc.perform(patch("/items/{itemId}", itemId)
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isOk())
@@ -179,7 +180,7 @@ class ItemControllerTest {
         when(itemService.addComment(any(CommentDto.class), eq(itemId), eq(userId))).thenReturn(outputDto);
 
         mvc.perform(post("/items/{itemId}/comment", itemId)
-                        .header("X-Sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isOk())

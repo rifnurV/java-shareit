@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.request.dto.ItemRequestDto;
 
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
+
 @Slf4j
 @Validated
 @RestController
@@ -19,7 +21,7 @@ public class ItemRequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> createItemRequest(@RequestHeader("X-Sharer-User-Id") @Positive Long requesterId,
+    public ResponseEntity<Object> createItemRequest(@RequestHeader(X_SHARER_USER_ID) @Positive Long requesterId,
                                                     @RequestBody final ItemRequestDto itemRequestDto) {
 
         log.info("START endpoint `method:POST /requests` (create itemRequest), request: {}.", itemRequestDto.getDescription());
@@ -28,7 +30,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getByRequestId(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getByRequestId(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                  @Positive @PathVariable Long requestId) {
 
         log.info("START endpoint `method:GET /requests/:requestId` (get itemRequest by id), itemRequest id: {}.", requestId);
@@ -45,7 +47,7 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllByRequesterId(@RequestHeader("X-Sharer-User-Id") Long requesterId) {
+    public ResponseEntity<Object> getAllByRequesterId(@RequestHeader(X_SHARER_USER_ID) Long requesterId) {
 
         log.info("START endpoint `method:GET /requests` (get all itemRequests by requester id), requester id: {}.", requesterId);
 

@@ -16,6 +16,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 @WebMvcTest(ItemRequestController.class)
 class ItemRequestControllerTest {
@@ -45,7 +46,7 @@ class ItemRequestControllerTest {
         when(requestService.add(requesterId, text)).thenReturn(responseDto);
 
         mvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", requesterId)
+                        .header(X_SHARER_USER_ID, requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(text))
                 .andExpect(status().isOk())
@@ -153,7 +154,7 @@ class ItemRequestControllerTest {
         when(requestService.getByUserId(requesterId)).thenReturn(List.of(request1, request2));
 
         mvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", requesterId))
+                        .header(X_SHARER_USER_ID, requesterId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].id").value(1L))
@@ -171,7 +172,7 @@ class ItemRequestControllerTest {
         when(requestService.getByUserId(requesterId)).thenReturn(List.of());
 
         mvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", requesterId))
+                        .header(X_SHARER_USER_ID, requesterId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
 

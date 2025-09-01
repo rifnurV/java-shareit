@@ -9,6 +9,8 @@ import ru.practicum.request.dto.ItemRequestDto;
 
 import java.util.List;
 
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class ItemRequestController {
     private final RequestService requestService;
 
     @PostMapping
-    public ItemRequestDto createItemRequest(@RequestHeader(value = "X-Sharer-User-Id", required = true) @Positive Long requesterId,
+    public ItemRequestDto createItemRequest(@RequestHeader(value = X_SHARER_USER_ID, required = true) @Positive Long requesterId,
                                             @RequestBody String text) {
         return requestService.add(requesterId, text);
     }
@@ -34,7 +36,7 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public List<ItemRequestDto> getAllByRequesterId(@RequestHeader(value = "X-Sharer-User-Id", required = true) @Positive Long requesterId) {
+    public List<ItemRequestDto> getAllByRequesterId(@RequestHeader(value = X_SHARER_USER_ID, required = true) @Positive Long requesterId) {
 
         return requestService.getByUserId(requesterId);
     }

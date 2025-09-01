@@ -12,6 +12,8 @@ import ru.practicum.item.dto.ItemDto;
 
 import java.util.List;
 
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
+
 @Slf4j
 @Validated
 @RestController
@@ -24,7 +26,7 @@ public class ItemController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDto> getByUserId(
-            @RequestHeader(value = "X-Sharer-User-Id", required = true) @Positive Long userId) {
+            @RequestHeader(value = X_SHARER_USER_ID, required = true) @Positive Long userId) {
         return itemService.getByUserId(userId);
     }
 
@@ -42,7 +44,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto create(@Valid @RequestBody ItemDto itemDto,
-                          @RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
+                          @RequestHeader(X_SHARER_USER_ID) @Positive Long userId) {
         itemDto.setOwnerId(userId);
         return itemService.create(itemDto, userId);
     }
@@ -50,12 +52,12 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemDto update(@PathVariable Long itemId,
                           @RequestBody ItemDto itemDto,
-                          @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+                          @RequestHeader(value = X_SHARER_USER_ID) Long userId) {
         return itemService.update(itemId, itemDto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+    public CommentDto addComment(@RequestHeader(X_SHARER_USER_ID) long userId,
                                  @PathVariable long itemId,
                                  @RequestBody CommentDto commentDto) {
 

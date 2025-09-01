@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.item.dto.ItemDto;
 
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
+
 @Slf4j
 @Validated
 @RestController
@@ -19,12 +21,12 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @GetMapping
-    public ResponseEntity<Object> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public ResponseEntity<Object> findAllByOwner(@RequestHeader(X_SHARER_USER_ID) Long ownerId) {
         return itemClient.findAllByOwnerId(ownerId);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> findById(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+    public ResponseEntity<Object> findById(@RequestHeader(X_SHARER_USER_ID) Long ownerId,
                                            @PathVariable Long itemId) {
         return itemClient.findById(ownerId, itemId);
     }
@@ -36,7 +38,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid @RequestBody ItemDto itemDto,
-                                         @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                         @RequestHeader(X_SHARER_USER_ID) Long userId) {
         itemDto.setOwnerId(userId);
         Validate.itemDto(itemDto);
         return itemClient.create(itemDto, userId);
@@ -45,13 +47,13 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> update(@PathVariable Long itemId,
                                          @RequestBody ItemDto itemDto,
-                                         @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+                                         @RequestHeader(value = X_SHARER_USER_ID) Long userId) {
         return itemClient.update(itemId, itemDto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestBody @Valid CommentDto commentDto,
-                                             @PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long authorId) {
+                                             @PathVariable Long itemId, @RequestHeader(X_SHARER_USER_ID) Long authorId) {
         log.info("Получен запрос POST /items");
         return itemClient.addComment(commentDto, itemId, authorId);
     }

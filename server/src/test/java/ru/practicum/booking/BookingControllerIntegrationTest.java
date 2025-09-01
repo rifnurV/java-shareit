@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.practicum.booking.BookingStatus.APPROVED;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 @Slf4j
 @SpringBootTest
@@ -173,7 +174,7 @@ public class BookingControllerIntegrationTest {
         init();
 
         mvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .content(mapper.writeValueAsString(itemDto1))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -188,7 +189,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testUpdateBookingWithInvalidBookingIdStatusNotFound() {
         mvc.perform(patch("/bookings/{bookingId}", invalidId)
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .param("approved", "true")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -201,7 +202,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStateStatusOk() {
         mvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .param("state", "CURRENT")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -214,7 +215,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStatePastStatusOk() {
         mvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of())));
@@ -224,7 +225,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserBookerAndStateRejectedStatusOk() {
         mvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .param("state", "REJECTED")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -235,7 +236,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetBookingByIdWithInvalidBookingIdStatusNotFound() {
         mvc.perform(get("/bookings/{bookingId}", invalidId)
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -248,7 +249,7 @@ public class BookingControllerIntegrationTest {
     @SneakyThrows
     public void testGetAllBookingsWithUserItemOwnerInvalidIdStatusNotFound() {
         mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", invalidId)
+                        .header(X_SHARER_USER_ID, invalidId)
                         .param("state", "ALL")
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size))
@@ -286,7 +287,7 @@ public class BookingControllerIntegrationTest {
                 .build();
 
         mvc.perform(post("/items/{itemId}/comment", itemId1)
-                        .header("X-Sharer-User-Id", userId2)
+                        .header(X_SHARER_USER_ID, userId2)
                         .content(mapper.writeValueAsString(commentInputDTO))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)

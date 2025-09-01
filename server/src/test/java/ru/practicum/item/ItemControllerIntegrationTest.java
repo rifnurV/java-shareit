@@ -24,6 +24,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 
 @Slf4j
@@ -90,7 +91,7 @@ class ItemControllerIntegrationTest {
         init();
 
         mvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId1)
+                        .header(X_SHARER_USER_ID, userId1)
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +107,7 @@ class ItemControllerIntegrationTest {
     @SneakyThrows
     public void testCreateItemWithInvalidUserIdStatusNotFound() {
         mvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", invalidId)
+                        .header(X_SHARER_USER_ID, invalidId)
                         .content(mapper.writeValueAsString(itemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -129,7 +130,7 @@ class ItemControllerIntegrationTest {
         List<ItemDto> items = Collections.singletonList(itemDto);
 
         mvc.perform(get("/items/search")
-                        .header("X-Sharer-User-Id", userId2)
+                        .header(X_SHARER_USER_ID, userId2)
                         .param("text", text)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -142,7 +143,7 @@ class ItemControllerIntegrationTest {
                 .text("Add comment from user1").build();
 
         mvc.perform(post("/items/{itemId}/comment", 2L)
-                        .header("X-Sharer-User-Id", userId2)
+                        .header(X_SHARER_USER_ID, userId2)
                         .content(mapper.writeValueAsString(commentDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +160,7 @@ class ItemControllerIntegrationTest {
 
 
         mvc.perform(post("/items/{itemId}/comment", invalidId)
-                        .header("X-Sharer-User-Id", userId2)
+                        .header(X_SHARER_USER_ID, userId2)
                         .content(mapper.writeValueAsString(commentDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -175,7 +176,7 @@ class ItemControllerIntegrationTest {
         String text = "";
 
         mvc.perform(get("/items/search")
-                        .header("X-Sharer-User-Id", userId2)
+                        .header(X_SHARER_USER_ID, userId2)
                         .param("text", text)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -17,6 +17,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.constant.Constant.X_SHARER_USER_ID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,7 +48,7 @@ class ItemRequestControllerIntegrationTest {
         when(requestService.add(requesterId, text)).thenReturn(responseDto);
 
         mvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", requesterId)
+                        .header(X_SHARER_USER_ID, requesterId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(text))
                 .andExpect(status().isOk())
@@ -84,7 +85,7 @@ class ItemRequestControllerIntegrationTest {
         when(requestService.getByUserId(requesterId)).thenReturn(List.of(request1));
 
         mvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", requesterId))
+                        .header(X_SHARER_USER_ID, requesterId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].id").value(1L))
